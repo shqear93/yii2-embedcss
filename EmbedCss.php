@@ -6,6 +6,11 @@ use yii\widgets\Block;
 
 class EmbedCss extends Block
 {
+    public function __set($name, $value)
+    {
+        $this->{$name} = $value;
+    }
+
     public $key;
 
     /**
@@ -32,7 +37,11 @@ class EmbedCss extends Block
         }
 
         $key = (empty($this->key)) ? md5($block) : $this->key;
+        $options = get_object_vars($this);
 
-        $this->view->registerCss($block, get_object_vars($this), $key);
+        foreach (['key', 'renderInPlace'] as $prop) {
+            unset($options[$prop]);
+        }
+        $this->view->registerCss($block, $options, $key);
     }
 }
